@@ -16,35 +16,25 @@ const express_1 = __importDefault(require("express"));
 const lodash_1 = __importDefault(require("lodash"));
 const middleware_1 = require("./middleware");
 const app = (0, express_1.default)();
-app.get("/api/blog-stats", (__, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const get = yield (0, middleware_1.getData)();
-    if (!get.ok || get.status != 200) {
-        res.status(500).send({ Error: get.statusText });
-    }
-    const data = (yield get.json());
+app.get("/api/blog-stats", middleware_1.middleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { data } = req;
     const maxTitleLengthBlog = lodash_1.default.maxBy(data.blogs, (b) => b.title);
     const titlesContainingPrivacy = lodash_1.default.filter(data === null || data === void 0 ? void 0 : data.blogs, (b) => b.title.includes("Privacy") || b.title.includes("privacy"));
     const uniqueBlogTitles = lodash_1.default.uniqBy(data.blogs, "title");
-    res.send({
+    res.status(200).send({
         number_of_blogs: data.blogs.length,
         longest_title: Object.assign({}, maxTitleLengthBlog),
         blogs_containing_privacy: titlesContainingPrivacy,
         unique_blog_titles: uniqueBlogTitles.map((a) => a.title),
     });
-    res.send({ Error: "Error while fetching data" });
 }));
-app.get("/api/blog-search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const get = yield (0, middleware_1.getData)();
-    if (!get.ok || get.status != 200) {
-        res.status(500).send({ Error: get.statusText });
-    }
-    const data = (yield get.json());
+app.get("/api/blog-search", middleware_1.middleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { data } = req;
     const { query } = req.query;
     const queryResult = lodash_1.default.filter(data === null || data === void 0 ? void 0 : data.blogs, (b) => b.title.toLowerCase().includes(query === null || query === void 0 ? void 0 : query.toString().toLowerCase()));
-    if (queryResult.length === 0) {
-        res.send({ Error: `No blogs found for query: \'${query}\'` });
-    }
-    res.send({ results: queryResult });
+    res.status(200).send({
+        results: queryResult.length != 0 ? queryResult : "Error 404: Not found",
+    });
 }));
 app.listen(3000, () => {
     console.log("Connected to http://localhost:3000");
