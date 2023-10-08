@@ -18,7 +18,7 @@ const middleware_1 = require("./middleware");
 const app = (0, express_1.default)();
 app.get("/api/blog-stats", middleware_1.middleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { data } = req;
-    const maxTitleLengthBlog = lodash_1.default.maxBy(data.blogs, (b) => b.title);
+    const maxTitleLengthBlog = lodash_1.default.maxBy(data.blogs, (b) => b.title.length);
     const titlesContainingPrivacy = lodash_1.default.filter(data === null || data === void 0 ? void 0 : data.blogs, (b) => b.title.includes("Privacy") || b.title.includes("privacy"));
     const uniqueBlogTitles = lodash_1.default.uniqBy(data.blogs, "title");
     res.status(200).send({
