@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Data } from "./type";
-
+import _ from "lodash";
 export async function middleware(
   req: Request & { data?: Data },
   res: Response,
@@ -15,13 +15,13 @@ export async function middleware(
       "32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6",
   };
   try {
-    const response = await fetch(
-      "https://intent-kit-16.hasura.app/api/rest/blogs",
-      {
+    const memoizedFetch = _.memoize(async () =>
+      fetch("https://intent-kit-16.hasura.app/api/rest/blogs", {
         method: "GET",
         headers: headers,
-      },
+      }),
     );
+    const response = await memoizedFetch();
     if (response.status === 200) {
       req.data = await response.json();
       next();

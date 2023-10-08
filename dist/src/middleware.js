@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.middleware = void 0;
+const lodash_1 = __importDefault(require("lodash"));
 function middleware(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         res.setHeader("x-hasura-admin-secret", "32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6");
@@ -17,10 +21,13 @@ function middleware(req, res, next) {
             "x-hasura-admin-secret": "32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6",
         };
         try {
-            const response = yield fetch("https://intent-kit-16.hasura.app/api/rest/blogs", {
-                method: "GET",
-                headers: headers,
-            });
+            const memoizedFetch = lodash_1.default.memoize(() => __awaiter(this, void 0, void 0, function* () {
+                return fetch("https://intent-kit-16.hasura.app/api/rest/blogs", {
+                    method: "GET",
+                    headers: headers,
+                });
+            }));
+            const response = yield memoizedFetch();
             if (response.status === 200) {
                 req.data = yield response.json();
                 next();

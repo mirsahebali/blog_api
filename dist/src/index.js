@@ -37,6 +37,6 @@ app.get("/api/blog-search", middleware_1.middleware, (req, res) => __awaiter(voi
     });
 }));
 app.listen(3000, () => {
-    console.log("Connected to http://localhost:3000");
+    console.log("Connected to port 3000");
 });
 //# sourceMappingURL=index.js.map

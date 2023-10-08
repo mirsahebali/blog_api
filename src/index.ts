@@ -9,7 +9,7 @@ app.get(
   middleware,
   async (req: Request & { data?: Data }, res) => {
     const { data } = req;
-    const maxTitleLengthBlog = _.maxBy(data.blogs, (b) => b.title);
+    const maxTitleLengthBlog = _.maxBy(data.blogs, (b) => b.title.length);
     const titlesContainingPrivacy = _.filter(
       data?.blogs,
       (b) => b.title.includes("Privacy") || b.title.includes("privacy"),
@@ -39,6 +39,7 @@ app.get(
     });
   },
 );
-app.listen(80, () => {
-  console.log("Connected to http://localhost:3000");
+
+app.listen(3000, () => {
+  console.log("Connected to port 3000");
 });
