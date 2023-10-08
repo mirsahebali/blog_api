@@ -39,6 +39,6 @@ app.get(
     });
   },
 );
-app.listen(3000, () => {
+app.listen(80, () => {
   console.log("Connected to http://localhost:3000");
 });
